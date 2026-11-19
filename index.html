@@ -4,832 +4,407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI स्कूल मेडिकल सहायक</title>
-
+<title>SchoolCare AI | Medical Assistant</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, "Noto Sans Devanagari", sans-serif;
+*{box-sizing:border-box}
+:root{
+  --primary:#2563eb;--dark:#172554;--bg:#f3f7fc;
+  --text:#172033;--muted:#64748b;--white:#fff;
 }
-
-body {
-  background: #f0f5fb;
-  color: #172b4d;
-  min-height: 100vh;
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);color:var(--text);
 }
-
-header {
-  background: white;
-  padding: 18px 7%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #e5eaf1;
+header{
+  background:linear-gradient(120deg,#1d4ed8,#0f766e);
+  color:white;padding:22px 6%;
 }
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  font-weight: bold;
+.header-inner{
+  max-width:1100px;margin:auto;display:flex;
+  align-items:center;justify-content:space-between;gap:15px;
 }
-
-.logo-icon {
-  background: #e0efff;
-  color: #1674d1;
-  padding: 12px;
-  border-radius: 12px;
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:48px;height:48px;border-radius:15px;
+  display:grid;place-items:center;background:#ffffff25;
+  font-size:26px;
 }
-
-.status {
-  color: #16854d;
-  font-size: 13px;
+.brand h1{font-size:21px;margin:0 0 5px}
+.brand p{font-size:12px;margin:0;color:#dbeafe}
+.status{font-size:12px;background:#ffffff20;padding:9px 12px;border-radius:20px}
+.container{max-width:1100px;margin:28px auto;padding:0 16px}
+.welcome{
+  background:white;border-radius:18px;padding:22px;
+  box-shadow:0 5px 25px #1e3a8a0c;margin-bottom:18px;
 }
-
-.container {
-  max-width: 1100px;
-  margin: 35px auto;
-  padding: 0 18px;
+.welcome h2{margin:0 0 9px;font-size:22px;color:var(--dark)}
+.welcome p{margin:0;color:var(--muted);line-height:1.6}
+.warning{
+  background:#fff7ed;border:1px solid #fed7aa;
+  color:#9a3412;padding:13px 15px;border-radius:12px;
+  font-size:13px;line-height:1.55;margin-top:15px;
 }
-
-.welcome {
-  margin-bottom: 25px;
+.chat-card{
+  background:white;border-radius:18px;overflow:hidden;
+  box-shadow:0 5px 25px #1e3a8a0c;
 }
-
-.welcome h1 {
-  font-size: 29px;
-  margin-bottom: 10px;
+.chat-top{
+  padding:17px 20px;border-bottom:1px solid #e8edf5;
+  display:flex;align-items:center;justify-content:space-between;
 }
-
-.welcome p {
-  color: #718096;
-  line-height: 1.8;
+.chat-top strong{color:var(--dark)}
+.chat-top button{
+  border:1px solid #dbe3ef;background:white;
+  padding:8px 12px;border-radius:9px;cursor:pointer;color:#475569;
 }
-
-.chat-layout {
-  display: grid;
-  grid-template-columns: 270px 1fr;
-  gap: 20px;
+.messages{
+  height:440px;overflow-y:auto;padding:22px;
+  display:flex;flex-direction:column;gap:16px;
 }
-
-.sidebar, .chat-box {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 5px 25px #1a365710;
+.message{display:flex;gap:10px;max-width:85%;align-items:flex-start}
+.message.user{align-self:flex-end;flex-direction:row-reverse}
+.avatar{
+  width:34px;height:34px;flex-shrink:0;border-radius:50%;
+  display:grid;place-items:center;background:#dbeafe;
 }
-
-.sidebar {
-  padding: 22px;
-  height: fit-content;
+.user .avatar{background:#d1fae5}
+.bubble{
+  padding:13px 15px;border-radius:15px;background:#f1f5f9;
+  line-height:1.6;font-size:14px;white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
-
-.sidebar h3 {
-  margin-bottom: 18px;
+.user .bubble{background:#2563eb;color:white;border-bottom-right-radius:4px}
+.bot .bubble{border-bottom-left-radius:4px}
+.suggestions{padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:8px}
+.suggestions button{
+  background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;
+  border-radius:20px;padding:9px 12px;font-size:12px;cursor:pointer;
 }
-
-.quick-btn {
-  width: 100%;
-  border: 1px solid #e5eaf1;
-  background: white;
-  padding: 13px;
-  text-align: left;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  color: #344767;
-  font-size: 14px;
+.input-area{border-top:1px solid #e8edf5;padding:16px 20px}
+.input-row{display:flex;gap:10px}
+.input-row input{
+  flex:1;min-width:0;border:1px solid #dbe3ef;
+  border-radius:12px;padding:14px;font-size:14px;outline:none;
 }
-
-.quick-btn:hover {
-  background: #eff7ff;
-  border-color: #8bbdf0;
+.input-row input:focus{border-color:#2563eb}
+.send{
+  background:#2563eb;color:white;border:0;border-radius:12px;
+  padding:0 22px;font-weight:bold;cursor:pointer;
 }
-
-.chat-box {
-  display: flex;
-  flex-direction: column;
-  height: 620px;
-  overflow: hidden;
+.send:disabled{opacity:.5;cursor:not-allowed}
+.small-note{font-size:11px;color:#94a3b8;margin-top:10px}
+.typing{color:#64748b;font-size:13px;padding:5px}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:25px}
+.modal-bg{
+  position:fixed;inset:0;background:#0f172a99;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;z-index:10;
 }
-
-.chat-header {
-  padding: 17px 20px;
-  border-bottom: 1px solid #edf0f5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.modal{
+  width:100%;max-width:430px;background:white;
+  padding:25px;border-radius:18px;
 }
-
-.bot-name {
-  font-weight: bold;
+.modal h2{margin-top:0;color:#172554}
+.modal p{font-size:13px;color:#64748b;line-height:1.6}
+.modal input{
+  width:100%;padding:13px;border:1px solid #cbd5e1;
+  border-radius:10px;margin:10px 0;
 }
-
-.clear-btn {
-  border: none;
-  background: #fff0f0;
-  color: #d44b4b;
-  padding: 9px 13px;
-  border-radius: 8px;
-  cursor: pointer;
+.modal button{
+  width:100%;padding:13px;background:#2563eb;
+  color:white;border:0;border-radius:10px;cursor:pointer;
 }
-
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.emergency{
+  display:none;background:#fef2f2;color:#991b1b;
+  border:1px solid #fecaca;border-radius:12px;
+  padding:14px;margin:0 20px 15px;font-size:13px;line-height:1.6;
 }
-
-.message {
-  max-width: 85%;
-  padding: 14px 16px;
-  border-radius: 13px;
-  line-height: 1.8;
-  font-size: 14px;
-  white-space: pre-wrap;
-}
-
-.bot {
-  background: #eff5fc;
-  align-self: flex-start;
-  border-bottom-left-radius: 3px;
-}
-
-.user {
-  background: #1876d2;
-  color: white;
-  align-self: flex-end;
-  border-bottom-right-radius: 3px;
-}
-
-.input-area {
-  padding: 16px;
-  border-top: 1px solid #edf0f5;
-  display: flex;
-  gap: 10px;
-}
-
-.input-area input {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid #dce4ee;
-  border-radius: 10px;
-  padding: 14px;
-  outline: none;
-  font-size: 14px;
-}
-
-.input-area input:focus {
-  border-color: #1876d2;
-}
-
-.send-btn {
-  background: #1876d2;
-  color: white;
-  border: none;
-  padding: 0 23px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.send-btn:hover {
-  background: #105ca8;
-}
-
-.disclaimer {
-  background: #fff8e6;
-  color: #87651c;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 18px;
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #8491a5;
-  font-size: 12px;
-}
-
-@media(max-width:750px) {
-  .chat-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    order: 2;
-  }
-
-  .chat-box {
-    height: 65vh;
-    min-height: 480px;
-  }
-
-  .welcome h1 {
-    font-size: 23px;
-  }
-
-  header {
-    padding: 15px;
-  }
-
-  .message {
-    max-width: 95%;
-  }
+@media(max-width:600px){
+  header{padding:17px}
+  .brand h1{font-size:18px}
+  .status{font-size:10px}
+  .messages{height:55vh;padding:14px}
+  .message{max-width:95%}
+  .input-area{padding:12px}
+  .send{padding:0 16px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-icon">✚</div>
-    <span>AI मेडिकल सहायक</span>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">🩺</div>
+      <div>
+        <h1>SchoolCare AI</h1>
+        <p>आपका स्मार्ट स्कूल हेल्थ असिस्टेंट</p>
+      </div>
+    </div>
+    <div class="status">● AI Assistant</div>
   </div>
-  <div class="status">● ऑनलाइन</div>
 </header>
 
 <div class="container">
-
-  <div class="welcome">
-    <h1>आपका स्कूल स्वास्थ्य सहायक 🩺</h1>
+  <section class="welcome">
+    <h2>नमस्ते! 👋 आपका स्वागत है</h2>
     <p>
-      सामान्य स्वास्थ्य समस्याओं, प्राथमिक उपचार और स्वस्थ जीवनशैली
-      से जुड़े सवाल पूछें। हम आपको स्वास्थ्य संबंधी सामान्य जानकारी
-      देने में मदद करेंगे।
+      मैं SchoolCare AI हूँ। आप मुझसे स्वास्थ्य, साफ-सफाई,
+      पोषण, व्यायाम और सामान्य स्वास्थ्य से जुड़े सवाल पूछ सकते हैं।
+      मैं आपको आसान भाषा में जानकारी देने की कोशिश करूँगा।
     </p>
-  </div>
+    <div class="warning">
+      ⚠️ <b>महत्वपूर्ण:</b> यह AI डॉक्टर नहीं है। यह बीमारी की
+      पुष्टि या दवा prescribe नहीं कर सकता। अपनी तबीयत खराब होने
+      पर शिक्षक, माता-पिता या डॉक्टर को जरूर बताएं।
+    </div>
+  </section>
 
-  <div class="chat-layout">
+  <section class="chat-card">
+    <div class="chat-top">
+      <strong>💬 AI Health Chat</strong>
+      <button onclick="clearChat()">नई बातचीत ↻</button>
+    </div>
 
-    <aside class="sidebar">
-      <h3>💡 कुछ सामान्य सवाल</h3>
+    <div id="emergency" class="emergency">
+      <b>⚠️ तुरंत मदद लें</b><br>
+      कृपया अभी अपने शिक्षक, माता-पिता या किसी जिम्मेदार बड़े
+      व्यक्ति को बताएं। सांस लेने में परेशानी, बेहोशी, दौरे,
+      गंभीर चोट या बहुत तेज दर्द होने पर तुरंत आपातकालीन चिकित्सा
+      सहायता लें। भारत में आपातकालीन सहायता के लिए 112 पर कॉल किया
+      जा सकता है।
+    </div>
 
-      <button class="quick-btn"
-      onclick="quickAsk('बुखार होने पर क्या करना चाहिए?')">
-        🌡️ बुखार
-      </button>
+    <div class="messages" id="messages">
+      <div class="message bot">
+        <div class="avatar">🩺</div>
+        <div class="bubble">
+          नमस्ते! 😊
 
-      <button class="quick-btn"
-      onclick="quickAsk('सिर दर्द होने पर क्या करना चाहिए?')">
-        🤕 सिरदर्द
-      </button>
+          मैं आपकी स्वास्थ्य संबंधी सामान्य जानकारी में मदद कर सकता हूँ।
 
-      <button class="quick-btn"
-      onclick="quickAsk('खाँसी और जुकाम होने पर क्या करें?')">
-        🤧 खाँसी और जुकाम
-      </button>
+          आप मुझसे ये सवाल पूछ सकते हैं:
+          • स्वस्थ रहने के लिए क्या खाना चाहिए?
+          • रोज कितना पानी पीना चाहिए?
+          • हाथ धोना क्यों जरूरी है?
+          • रोज व्यायाम करने के क्या फायदे हैं?
 
-      <button class="quick-btn"
-      onclick="quickAsk('पेट दर्द होने पर क्या करना चाहिए?')">
-        🩺 पेट दर्द
-      </button>
-
-      <button class="quick-btn"
-      onclick="quickAsk('विद्यार्थियों के लिए स्वस्थ आदतें बताइए')">
-        🥗 स्वस्थ आदतें
-      </button>
-
-      <button class="quick-btn"
-      onclick="quickAsk('प्राथमिक उपचार क्या होता है?')">
-        🩹 प्राथमिक उपचार
-      </button>
-
-      <button class="quick-btn"
-      onclick="quickAsk('संतुलित आहार क्या होता है?')">
-        🍎 संतुलित आहार
-      </button>
-
-      <button class="quick-btn"
-      onclick="quickAsk('मानसिक तनाव कैसे कम करें?')">
-        🧠 मानसिक स्वास्थ्य
-      </button>
-
-    </aside>
-
-    <main class="chat-box">
-
-      <div class="chat-header">
-        <div>
-          <div class="bot-name">मेडिकल चैटबॉट 🤖</div>
-          <small style="color:#16a36a">
-            सामान्य स्वास्थ्य जानकारी
-          </small>
+          बताइए, आज आप क्या जानना चाहते हैं?
         </div>
-
-        <button class="clear-btn" onclick="clearChat()">
-          चैट मिटाएँ
-        </button>
       </div>
+    </div>
 
-      <div class="messages" id="messages">
+    <div class="suggestions">
+      <button onclick="askSuggestion('स्वस्थ रहने के लिए क्या खाना चाहिए?')">🥗 स्वस्थ भोजन</button>
+      <button onclick="askSuggestion('हमें रोज व्यायाम क्यों करना चाहिए?')">🏃 व्यायाम</button>
+      <button onclick="askSuggestion('हाथ धोना क्यों जरूरी है?')">🧼 स्वच्छता</button>
+      <button onclick="askSuggestion('पानी पीने के क्या फायदे हैं?')">💧 पानी</button>
+    </div>
 
-        <div class="message bot">
-          नमस्ते! 👋
-
-          AI स्कूल मेडिकल सहायक में आपका स्वागत है।
-
-          मैं आपको इन विषयों पर सामान्य जानकारी दे सकता हूँ:
-
-          • सामान्य स्वास्थ्य समस्याएँ
-          • प्राथमिक उपचार
-          • संतुलित आहार
-          • व्यक्तिगत स्वच्छता
-          • स्वस्थ जीवनशैली
-          • मानसिक स्वास्थ्य
-
-          बताइए, आज मैं आपकी क्या मदद कर सकता हूँ? 😊
-        </div>
-
-      </div>
-
-      <div class="input-area">
-
-        <input
-          id="userInput"
-          type="text"
+    <div class="input-area">
+      <div class="input-row">
+        <input id="question" type="text"
           placeholder="अपना स्वास्थ्य संबंधी सवाल लिखें..."
-          onkeydown="if(event.key==='Enter') sendMessage()"
-        >
-
-        <button class="send-btn" onclick="sendMessage()">
-          भेजें ➤
-        </button>
-
+          maxlength="1000"
+          onkeydown="if(event.key==='Enter') sendMessage()">
+        <button class="send" id="sendBtn" onclick="sendMessage()">भेजें ➤</button>
       </div>
-
-    </main>
-
-  </div>
-
-  <div class="disclaimer">
-    ⚠️ <b>महत्वपूर्ण सूचना:</b>
-
-    यह चैटबॉट केवल सामान्य स्वास्थ्य शिक्षा और जानकारी देने के लिए है।
-    यह किसी बीमारी की पहचान, निदान या व्यक्तिगत इलाज नहीं कर सकता।
-    स्वास्थ्य संबंधी परेशानी होने पर अपने माता-पिता, शिक्षक, स्कूल नर्स
-    या योग्य डॉक्टर से संपर्क करें।
-
-    किसी आपातकालीन स्थिति में तुरंत चिकित्सा सहायता लें।
-    भारत में आपातकालीन सहायता के लिए 112 पर कॉल करें।
-  </div>
-
+      <div class="small-note">
+        कृपया अपना नाम, फोन नंबर, पता या निजी मेडिकल जानकारी न लिखें।
+      </div>
+    </div>
+  </section>
 </div>
 
 <footer>
-  AI स्कूल मेडिकल सहायक | शैक्षणिक परियोजना
-
-  <br><br>
-
-  विद्यार्थियों के स्वास्थ्य और जागरूकता के लिए बनाया गया।
+  SchoolCare AI · Educational Health Assistant · AI द्वारा दी गई जानकारी की डॉक्टर से पुष्टि करें।
 </footer>
 
+<div class="modal-bg" id="keyModal">
+  <div class="modal">
+    <h2>🔑 Groq API सेटअप</h2>
+    <p>
+      अपना Groq API key डालें। यह इस browser session में ही इस्तेमाल
+      होगी। इसे HTML में save या hardcode नहीं किया जाएगा।
+      ध्यान दें: browser से API call करने पर key नेटवर्क अनुरोधों
+      में दिखाई दे सकती है। इसे public school website पर इस्तेमाल
+      न करें।
+    </p>
+    <input id="apiKey" type="password" placeholder="gsk_...">
+    <button onclick="saveKey()">शुरू करें</button>
+    <p>Groq API key: https://console.groq.com/keys</p>
+  </div>
+</div>
+
 <script>
+let apiKey = "";
+let conversation = [];
+let busy = false;
 
-const messages = document.getElementById("messages");
-const input = document.getElementById("userInput");
+const MODEL = "llama-3.3-70b-versatile";
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-function addMessage(text, type) {
+const SYSTEM_PROMPT = `
+आप SchoolCare AI हैं, भारत के स्कूल के बच्चों के लिए एक सुरक्षित
+और दोस्ताना सामान्य स्वास्थ्य जानकारी देने वाले सहायक।
 
-  const div = document.createElement("div");
+नियम:
+1. हमेशा सरल, स्पष्ट और सम्मानजनक हिंदी में जवाब दें।
+   यदि बच्चा अंग्रेज़ी में पूछे तो अंग्रेज़ी में जवाब दे सकते हैं।
+2. बच्चों की उम्र के अनुसार आसान शब्दों का प्रयोग करें।
+3. आप डॉक्टर नहीं हैं। बीमारी का diagnosis न करें।
+4. दवा prescribe न करें और दवा की खुराक न बताएं।
+5. किसी भी गंभीर लक्षण को मामूली बताकर नजरअंदाज न करें।
+6. सांस लेने में परेशानी, बेहोशी, दौरे, गंभीर चोट, अत्यधिक
+   रक्तस्राव या आत्म-हानि के विचार होने पर तुरंत किसी शिक्षक,
+   अभिभावक या जिम्मेदार वयस्क को बताने और आपातकालीन सहायता
+   लेने की सलाह दें। भारत में आपातकालीन नंबर 112 है।
+7. बच्चे को कभी भी अपनी दवा खुद से लेने या दवा बंद करने की सलाह
+   न दें। हमेशा अभिभावक और डॉक्टर की मदद लेने को कहें।
+8. निजी जानकारी जैसे पूरा नाम, पता, फोन नंबर या स्कूल ID न मांगें।
+9. स्वास्थ्य, पोषण, व्यायाम, नींद और स्वच्छता पर सामान्य
+   शैक्षिक जानकारी दें।
+10. यदि सवाल आपके दायरे से बाहर हो तो साफ बताएं और शिक्षक,
+    अभिभावक या डॉक्टर से पूछने को कहें।
+11. डराने वाले जवाब न दें और किसी बीमारी की पक्की पुष्टि न करें।
+12. जवाब संक्षिप्त, उपयोगी और बच्चों के लिए समझने योग्य रखें।
+`;
 
-  div.className = "message " + type;
+function saveKey(){
+  const value = document.getElementById("apiKey").value.trim();
+  if(!value){
+    alert("कृपया Groq API key डालें।");
+    return;
+  }
+  apiKey = value;
+  document.getElementById("keyModal").style.display = "none";
+}
 
-  div.textContent = text;
+function addMessage(text, type){
+  const messages = document.getElementById("messages");
+  const item = document.createElement("div");
+  item.className = "message " + type;
 
-  messages.appendChild(div);
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = type === "user" ? "🙂" : "🩺";
 
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
+
+  item.appendChild(avatar);
+  item.appendChild(bubble);
+  messages.appendChild(item);
   messages.scrollTop = messages.scrollHeight;
-
+  return item;
 }
 
-function quickAsk(question) {
-
-  input.value = question;
-
+function askSuggestion(text){
+  document.getElementById("question").value = text;
   sendMessage();
-
 }
 
-function getResponse(question) {
-
-  const q = question.toLowerCase();
-
-  // आपातकालीन स्थिति
-
-  const emergency = [
-    "सीने में दर्द",
-    "सांस नहीं",
-    "सांस लेने में परेशानी",
-    "बेहोश",
-    "बेहोशी",
-    "दौरा",
-    "बहुत खून",
-    "खून बह रहा",
-    "chest pain",
-    "difficulty breathing",
-    "can't breathe",
-    "unconscious",
-    "seizure",
-    "heavy bleeding",
-    "not breathing"
+function checkEmergency(text){
+  const patterns = [
+    /सांस नहीं|सांस लेने में|सांस की तकलीफ|breathing difficulty|can't breathe|cannot breathe/i,
+    /बेहोश|बेहोशी|unconscious|passed out/i,
+    /दौरा|दौरे|seizure|convulsion/i,
+    /बहुत खून|खून बह रहा|गंभीर चोट|severe bleeding|serious injury/i,
+    /सीने में तेज दर्द|chest pain/i,
+    /खुदकुशी|आत्महत्या|खुद को नुकसान|suicid|self.harm/i
   ];
-
-  if (emergency.some(word => q.includes(word))) {
-
-    return `⚠️ आपातकालीन चेतावनी!
-
-यह स्थिति गंभीर हो सकती है।
-
-1. तुरंत किसी शिक्षक या जिम्मेदार वयस्क को बुलाएँ।
-2. भारत में आपातकालीन सहायता के लिए 112 पर कॉल करें।
-3. प्रभावित व्यक्ति को अकेला न छोड़ें।
-4. आपातकालीन सेवा के निर्देशों का पालन करें।
-
-ऑनलाइन चैटबॉट के जवाब का इंतजार न करें।`;
-
-  }
-
-  // बुखार
-
-  if (
-    q.includes("बुखार") ||
-    q.includes("fever") ||
-    q.includes("bukhar")
-  ) {
-
-    return `🌡️ बुखार के बारे में जानकारी
-
-बुखार होने पर निम्नलिखित बातों का ध्यान रखें:
-
-1. अपने माता-पिता या शिक्षक को बताएँ।
-2. पर्याप्त आराम करें।
-3. नियमित रूप से पानी और तरल पदार्थ लें।
-4. शरीर को अधिक थकाने वाली गतिविधियों से बचें।
-5. किसी वयस्क की मदद से तापमान जाँचें।
-6. बुखार अधिक हो या बना रहे तो डॉक्टर से सलाह लें।
-
-यदि साँस लेने में परेशानी, भ्रम, दौरे या गंभीर
-निर्जलीकरण के लक्षण हों तो तुरंत चिकित्सा सहायता लें।
-
-बिना डॉक्टर या जिम्मेदार वयस्क की सलाह के दवा न लें।`;
-
-  }
-
-  // सिरदर्द
-
-  if (
-    q.includes("सिरदर्द") ||
-    q.includes("सिर दर्द") ||
-    q.includes("headache") ||
-    q.includes("sir dard")
-  ) {
-
-    return `🤕 सिरदर्द के बारे में जानकारी
-
-सिरदर्द के कुछ सामान्य कारण हो सकते हैं:
-• पानी की कमी
-• नींद पूरी न होना
-• तनाव
-• अधिक समय तक स्क्रीन देखना
-
-आप क्या कर सकते हैं?
-
-1. शांत जगह पर आराम करें।
-2. पर्याप्त पानी पिएँ।
-3. मोबाइल और कंप्यूटर से थोड़ा ब्रेक लें।
-4. अपने माता-पिता या शिक्षक को बताएँ।
-
-अचानक बहुत तेज सिरदर्द, सिर में चोट के बाद दर्द,
-या सिरदर्द के साथ कमजोरी, भ्रम या बुखार होने पर
-तुरंत डॉक्टर से जाँच करवाएँ।`;
-
-  }
-
-  // खाँसी और जुकाम
-
-  if (
-    q.includes("खाँसी") ||
-    q.includes("खांसी") ||
-    q.includes("जुकाम") ||
-    q.includes("सर्दी") ||
-    q.includes("cough") ||
-    q.includes("cold") ||
-    q.includes("khansi")
-  ) {
-
-    return `🤧 खाँसी और जुकाम के बारे में जानकारी
-
-सामान्य देखभाल के लिए:
-
-1. पर्याप्त आराम करें।
-2. पर्याप्त मात्रा में तरल पदार्थ लें।
-3. नियमित रूप से हाथ धोएँ।
-4. खाँसते या छींकते समय मुँह ढकें।
-5. अपनी पानी की बोतल दूसरों से साझा न करें।
-
-लक्षण बढ़ने पर किसी वयस्क को बताएँ।
-
-साँस लेने में परेशानी या सीने में दर्द होने पर
-तुरंत चिकित्सा सहायता लें।
-
-सही कारण जानने के लिए डॉक्टर से सलाह लें।`;
-
-  }
-
-  // पेट दर्द
-
-  if (
-    q.includes("पेट दर्द") ||
-    q.includes("पेट में दर्द") ||
-    q.includes("stomach") ||
-    q.includes("pet dard")
-  ) {
-
-    return `🩺 पेट दर्द के बारे में जानकारी
-
-पेट दर्द के कई अलग-अलग कारण हो सकते हैं।
-
-आपको क्या करना चाहिए?
-
-1. अपने माता-पिता या स्कूल नर्स को बताएँ।
-2. आरामदायक स्थिति में आराम करें।
-3. यदि पी सकते हैं तो पर्याप्त तरल पदार्थ लें।
-4. ऐसा भोजन न करें जिससे परेशानी बढ़ती हो।
-
-यदि दर्द बहुत तेज हो रहा हो, पेट में सूजन हो,
-बार-बार उल्टी हो, मल या उल्टी में खून आए
-या बेहोशी हो तो तुरंत चिकित्सा सहायता लें।
-
-बिना डॉक्टर की सलाह के दवा न लें।`;
-
-  }
-
-  // प्राथमिक उपचार
-
-  if (
-    q.includes("प्राथमिक उपचार") ||
-    q.includes("first aid") ||
-    q.includes("चोट") ||
-    q.includes("कट") ||
-    q.includes("जलना")
-  ) {
-
-    return `🩹 प्राथमिक उपचार (First Aid)
-
-छोटी चोट या कट लगने पर:
-
-1. सबसे पहले अपने हाथ साफ करें।
-2. घाव को साफ बहते पानी से धोएँ।
-3. खून निकलने पर साफ कपड़े या गॉज से हल्का दबाव दें।
-4. साफ पट्टी से घाव को ढकें।
-
-गंभीर रक्तस्राव होने पर साफ कपड़े या गॉज से
-सीधा दबाव बनाएँ और तुरंत चिकित्सा सहायता लें।
-
-जलने पर प्रभावित स्थान को 20 मिनट तक
-ठंडे बहते पानी के नीचे रखें।
-
-बर्फ, टूथपेस्ट या मक्खन न लगाएँ।
-
-हमेशा किसी जिम्मेदार वयस्क को सूचित करें।`;
-
-  }
-
-  // पोषण
-
-  if (
-    q.includes("पोषण") ||
-    q.includes("संतुलित आहार") ||
-    q.includes("भोजन") ||
-    q.includes("खाना") ||
-    q.includes("diet") ||
-    q.includes("nutrition") ||
-    q.includes("healthy food")
-  ) {
-
-    return `🥗 विद्यार्थियों के लिए संतुलित आहार
-
-एक संतुलित आहार में शामिल हो सकते हैं:
-
-1. फल और हरी सब्जियाँ।
-2. साबुत अनाज।
-3. दालें, अंडे और अन्य प्रोटीन युक्त खाद्य पदार्थ।
-4. दूध या उसके उपयुक्त विकल्प।
-5. पर्याप्त पानी।
-
-भोजन समय पर करें और बिना कारण खाना न छोड़ें।
-
-व्यक्तिगत पोषण संबंधी जरूरतों के लिए
-योग्य डॉक्टर या डाइटीशियन से सलाह लें।`;
-
-  }
-
-  // स्वस्थ आदतें
-
-  if (
-    q.includes("स्वस्थ आदत") ||
-    q.includes("स्वास्थ्य टिप्स") ||
-    q.includes("fitness") ||
-    q.includes("health tips") ||
-    q.includes("healthy habit")
-  ) {
-
-    return `💚 विद्यार्थियों के लिए स्वस्थ आदतें
-
-1. नियमित समय पर सोएँ और पर्याप्त नींद लें।
-2. संतुलित भोजन करें।
-3. रोज शारीरिक गतिविधियों में भाग लें।
-4. पर्याप्त पानी पिएँ।
-5. व्यक्तिगत स्वच्छता बनाए रखें।
-6. स्क्रीन से बीच-बीच में ब्रेक लें।
-7. तनाव होने पर किसी भरोसेमंद व्यक्ति से बात करें।
-8. नियमित स्वास्थ्य जाँच करवाएँ।
-
-छोटी-छोटी अच्छी आदतें स्वस्थ जीवन का आधार हैं!`;
-
-  }
-
-  // पानी
-
-  if (
-    q.includes("पानी") ||
-    q.includes("जल") ||
-    q.includes("water") ||
-    q.includes("pani")
-  ) {
-
-    return `💧 पानी और शरीर का स्वास्थ्य
-
-दिनभर नियमित रूप से पानी पिएँ।
-
-पानी की जरूरत उम्र, मौसम और शारीरिक गतिविधि
-के अनुसार अलग-अलग हो सकती है।
-
-1. स्कूल में साफ पानी की बोतल साथ रखें।
-2. गर्मी में और व्यायाम के दौरान पानी का ध्यान रखें।
-3. चक्कर आना, बहुत गहरे रंग का पेशाब या
-   असामान्य कमजोरी होने पर किसी वयस्क को बताएँ।
-
-अपने शरीर में पानी की कमी न होने दें।`;
-
-  }
-
-  // मानसिक स्वास्थ्य
-
-  if (
-    q.includes("तनाव") ||
-    q.includes("मानसिक स्वास्थ्य") ||
-    q.includes("चिंता") ||
-    q.includes("stress") ||
-    q.includes("anxiety") ||
-    q.includes("tension")
-  ) {
-
-    return `🧠 मानसिक स्वास्थ्य और तनाव
-
-कभी-कभी तनाव महसूस होना सामान्य है।
-
-तनाव कम करने के कुछ तरीके:
-
-1. अपने भरोसेमंद व्यक्ति से बात करें।
-2. कुछ समय के लिए आराम करें।
-3. धीरे-धीरे और सहजता से साँस लें।
-4. नियमित नींद का समय बनाए रखें।
-5. बड़े कामों को छोटे हिस्सों में बाँटें।
-
-यदि तनाव बहुत अधिक हो या लगातार बना रहे,
-तो स्कूल काउंसलर या मानसिक स्वास्थ्य विशेषज्ञ
-से बात करें।
-
-आपको हर परेशानी अकेले संभालने की जरूरत नहीं है।`;
-
-  }
-
-  // स्वच्छता
-
-  if (
-    q.includes("स्वच्छता") ||
-    q.includes("सफाई") ||
-    q.includes("hygiene") ||
-    q.includes("हाथ धो")
-  ) {
-
-    return `🧼 व्यक्तिगत स्वच्छता
-
-स्वस्थ रहने के लिए व्यक्तिगत स्वच्छता जरूरी है।
-
-1. खाना खाने से पहले हाथ धोएँ।
-2. शौचालय के बाद साबुन से हाथ साफ करें।
-3. रोज साफ कपड़े पहनें।
-4. नियमित रूप से स्नान करें।
-5. दाँतों की सफाई करें।
-6. साफ पानी पिएँ।
-7. अपनी व्यक्तिगत वस्तुएँ दूसरों से साझा न करें।
-
-स्वच्छता कई संक्रमणों से बचाव में मदद करती है।`;
-
-  }
-
-  // अभिवादन
-
-  if (
-    q.includes("नमस्ते") ||
-    q.includes("नमस्कार") ||
-    q.includes("hello") ||
-    q.includes("hi") ||
-    q.includes("हेलो")
-  ) {
-
-    return `नमस्ते! 👋
-
-AI स्कूल मेडिकल सहायक में आपका स्वागत है।
-
-मैं आपको इन विषयों पर सामान्य जानकारी दे सकता हूँ:
-
-• बुखार
-• सिरदर्द
-• खाँसी और जुकाम
-• पेट दर्द
-• प्राथमिक उपचार
-• पोषण
-• स्वस्थ आदतें
-• मानसिक स्वास्थ्य
-
-बताइए, आप क्या जानना चाहते हैं? 😊`;
-
-  }
-
-  // सामान्य उत्तर
-
-  return `आपके सवाल के लिए धन्यवाद! 😊
-
-मुझे इस सवाल का विश्वसनीय उत्तर देने के लिए
-पर्याप्त जानकारी उपलब्ध नहीं है।
-
-आप मुझसे इन विषयों पर सवाल पूछ सकते हैं:
-
-• बुखार
-• सिरदर्द
-• खाँसी और जुकाम
-• पेट दर्द
-• प्राथमिक उपचार
-• पोषण
-• व्यक्तिगत स्वच्छता
-• मानसिक स्वास्थ्य
-
-व्यक्तिगत चिकित्सा सलाह के लिए योग्य डॉक्टर से संपर्क करें।
-
-ध्यान दें: मैं किसी बीमारी का निदान नहीं कर सकता।`;
-
+  return patterns.some(pattern => pattern.test(text));
 }
 
-function sendMessage() {
+async function sendMessage(){
+  if(busy) return;
 
-  const question = input.value.trim();
+  if(!apiKey){
+    document.getElementById("keyModal").style.display = "flex";
+    return;
+  }
 
-  if (!question) return;
-
-  addMessage(question, "user");
+  const input = document.getElementById("question");
+  const text = input.value.trim();
+  if(!text) return;
 
   input.value = "";
+  addMessage(text, "user");
 
-  setTimeout(() => {
+  if(checkEmergency(text)){
+    document.getElementById("emergency").style.display = "block";
+  }
 
-    const response = getResponse(question);
+  conversation.push({role:"user", content:text});
 
-    addMessage(response, "bot");
+  // केवल हाल के संदेश भेजें ताकि request बहुत बड़ी न हो।
+  const recent = conversation.slice(-12);
 
-  }, 400);
+  busy = true;
+  const button = document.getElementById("sendBtn");
+  button.disabled = true;
+  button.textContent = "जवाब आ रहा है...";
 
+  const typing = addMessage("सोच रहा हूँ... कृपया प्रतीक्षा करें।", "bot");
+
+  try{
+    const response = await fetch(API_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + apiKey
+      },
+      body:JSON.stringify({
+        model:MODEL,
+        messages:[
+          {role:"system",content:SYSTEM_PROMPT},
+          ...recent
+        ],
+        temperature:0.4,
+        max_tokens:600
+      })
+    });
+
+    const data = await response.json();
+    typing.remove();
+
+    if(!response.ok){
+      const message = data.error?.message || "API request असफल हुई।";
+      throw new Error(message);
+    }
+
+    const answer = data.choices?.[0]?.message?.content;
+    if(!answer) throw new Error("AI से जवाब प्राप्त नहीं हुआ।");
+
+    conversation.push({role:"assistant",content:answer});
+    addMessage(answer,"bot");
+
+  }catch(error){
+    typing.remove();
+    addMessage(
+      "माफ़ कीजिए, अभी जवाब प्राप्त नहीं हो पाया।\n\nकारण: " +
+      error.message +
+      "\n\nकृपया API key और इंटरनेट कनेक्शन जांचें।",
+      "bot"
+    );
+  }finally{
+    busy = false;
+    button.disabled = false;
+    button.textContent = "भेजें ➤";
+    input.focus();
+  }
 }
 
-function clearChat() {
-
-  messages.innerHTML = "";
-
+function clearChat(){
+  conversation = [];
+  document.getElementById("messages").innerHTML = "";
+  document.getElementById("emergency").style.display = "none";
   addMessage(
-    `नमस्ते! 👋
-
-AI स्कूल मेडिकल सहायक में आपका फिर से स्वागत है।
-
-बताइए, आज मैं आपकी क्या मदद कर सकता हूँ?`,
+    "नमस्ते! 😊 नई बातचीत शुरू हो गई है। आप स्वास्थ्य से जुड़ा सवाल पूछ सकते हैं।",
     "bot"
   );
-
 }
-
 </script>
-
 </body>
 </html>
