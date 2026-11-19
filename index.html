@@ -1,0 +1,629 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI School Medical Assistant</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f0f5fb;
+  color: #172b4d;
+  min-height: 100vh;
+}
+
+header {
+  background: #ffffff;
+  padding: 18px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5eaf1;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.logo-icon {
+  background: #e0efff;
+  color: #1674d1;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.status {
+  color: #16854d;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 35px auto;
+  padding: 0 18px;
+}
+
+.welcome {
+  margin-bottom: 25px;
+}
+
+.welcome h1 {
+  font-size: 29px;
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  color: #718096;
+  line-height: 1.6;
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 20px;
+}
+
+.sidebar, .chat-box {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px #1a365710;
+}
+
+.sidebar {
+  padding: 22px;
+  height: fit-content;
+}
+
+.sidebar h3 {
+  margin-bottom: 18px;
+}
+
+.quick-btn {
+  width: 100%;
+  border: 1px solid #e5eaf1;
+  background: white;
+  padding: 13px;
+  text-align: left;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #344767;
+}
+
+.quick-btn:hover {
+  background: #eff7ff;
+  border-color: #8bbdf0;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 17px 20px;
+  border-bottom: 1px solid #edf0f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bot-name {
+  font-weight: bold;
+}
+
+.clear-btn {
+  border: none;
+  background: #fff0f0;
+  color: #d44b4b;
+  padding: 9px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message {
+  max-width: 85%;
+  padding: 14px 16px;
+  border-radius: 13px;
+  line-height: 1.6;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.bot {
+  background: #eff5fc;
+  align-self: flex-start;
+  border-bottom-left-radius: 3px;
+}
+
+.user {
+  background: #1876d2;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 3px;
+}
+
+.input-area {
+  padding: 16px;
+  border-top: 1px solid #edf0f5;
+  display: flex;
+  gap: 10px;
+}
+
+.input-area input {
+  flex: 1;
+  border: 1px solid #dce4ee;
+  border-radius: 10px;
+  padding: 14px;
+  outline: none;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.input-area input:focus {
+  border-color: #1876d2;
+}
+
+.send-btn {
+  background: #1876d2;
+  color: white;
+  border: none;
+  padding: 0 23px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.send-btn:hover {
+  background: #105ca8;
+}
+
+.disclaimer {
+  background: #fff8e6;
+  color: #87651c;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 18px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #8491a5;
+  font-size: 12px;
+}
+
+@media(max-width: 750px) {
+  .chat-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    order: 2;
+  }
+
+  .chat-box {
+    height: 65vh;
+    min-height: 480px;
+  }
+
+  .welcome h1 {
+    font-size: 23px;
+  }
+
+  header {
+    padding: 15px;
+  }
+
+  .message {
+    max-width: 95%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">✚</div>
+    <span>AI Medical Assistant</span>
+  </div>
+  <div class="status">● Online</div>
+</header>
+
+<div class="container">
+
+  <div class="welcome">
+    <h1>Your School Health Assistant 🩺</h1>
+    <p>
+      Ask questions about common health concerns, first aid
+      and healthy habits. I am here to provide basic health education.
+    </p>
+  </div>
+
+  <div class="chat-layout">
+
+    <aside class="sidebar">
+      <h3>Quick Questions</h3>
+
+      <button class="quick-btn" onclick="quickAsk('What should I do if I have fever?')">
+        🌡️ Fever
+      </button>
+
+      <button class="quick-btn" onclick="quickAsk('What can I do for a headache?')">
+        🤕 Headache
+      </button>
+
+      <button class="quick-btn" onclick="quickAsk('What should I do for cough and cold?')">
+        🤧 Cough & Cold
+      </button>
+
+      <button class="quick-btn" onclick="quickAsk('What should I do for stomach pain?')">
+        🩺 Stomach Pain
+      </button>
+
+      <button class="quick-btn" onclick="quickAsk('Tell me some healthy habits for students')">
+        🥗 Healthy Habits
+      </button>
+
+      <button class="quick-btn" onclick="quickAsk('Tell me about basic first aid')">
+        🩹 First Aid
+      </button>
+    </aside>
+
+    <main class="chat-box">
+
+      <div class="chat-header">
+        <div>
+          <div class="bot-name">Medical Chatbot</div>
+          <small style="color:#16a36a">Basic health information</small>
+        </div>
+        <button class="clear-btn" onclick="clearChat()">Clear Chat</button>
+      </div>
+
+      <div class="messages" id="messages">
+        <div class="message bot">
+          Hello! 👋
+
+          Welcome to your School Medical Assistant.
+
+          You can ask me about:
+          • Common health symptoms
+          • First aid
+          • Nutrition
+          • Hygiene
+          • Healthy lifestyle
+
+          How can I help you today?
+        </div>
+      </div>
+
+      <div class="input-area">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Ask your health question..."
+          onkeydown="if(event.key==='Enter') sendMessage()"
+        >
+        <button class="send-btn" onclick="sendMessage()">Send ➤</button>
+      </div>
+
+    </main>
+
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ <b>Medical Disclaimer:</b>
+    This chatbot provides general health education only.
+    It cannot diagnose diseases, recommend individual treatments
+    or replace a doctor. Always inform a parent, school nurse
+    or responsible adult about health concerns. In an emergency
+    in India, call 112 or seek immediate medical assistance.
+  </div>
+
+</div>
+
+<footer>
+  AI School Medical Assistant | Educational Project
+  <br><br>
+  Designed for student health awareness.
+</footer>
+
+<script>
+
+const messages = document.getElementById("messages");
+const input = document.getElementById("userInput");
+
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = "message " + type;
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function quickAsk(question) {
+  input.value = question;
+  sendMessage();
+}
+
+function getResponse(question) {
+
+  const q = question.toLowerCase();
+
+  // Emergency warning
+  const emergency = [
+    "chest pain", "can't breathe", "cannot breathe",
+    "difficulty breathing", "unconscious", "seizure",
+    "heavy bleeding", "severe bleeding", "not breathing",
+    "बेहोश", "सांस नहीं", "सीने में दर्द",
+    "दौरा", "बहुत खून"
+  ];
+
+  if (emergency.some(word => q.includes(word))) {
+    return `⚠️ EMERGENCY ALERT
+
+This may require immediate medical attention.
+
+1. Tell a teacher or responsible adult immediately.
+2. Call India's emergency number 112.
+3. Do not leave the person alone.
+4. Follow the emergency operator's instructions.
+
+Do not wait for an online chatbot response.`;
+  }
+
+  // Fever
+  if (q.includes("fever") || q.includes("bukhar") || q.includes("बुखार")) {
+    return `🌡️ FEVER - BASIC HEALTH INFORMATION
+
+If you have a fever:
+
+1. Inform your parent, teacher or school nurse.
+2. Rest and drink fluids regularly.
+3. Avoid strenuous physical activity.
+4. Ask an adult to arrange a temperature check.
+5. Seek medical advice, especially if the fever is high,
+   persistent or accompanied by worrying symptoms.
+
+Seek urgent help if you have difficulty breathing,
+confusion, a seizure or severe dehydration.
+
+Do not take medication without adult and medical guidance.`;
+  }
+
+  // Headache
+  if (q.includes("headache") || q.includes("sir dard") || q.includes("सिर दर्द")) {
+    return `🤕 HEADACHE - BASIC INFORMATION
+
+Some common factors include dehydration, lack of sleep,
+eye strain and stress.
+
+What you can do:
+1. Rest in a quiet environment.
+2. Drink some water.
+3. Take a break from screens.
+4. Inform a responsible adult.
+
+A sudden severe headache, headache after a head injury,
+or headache with confusion, weakness or fever needs
+urgent medical evaluation.`;
+  }
+
+  // Cough and cold
+  if (q.includes("cough") || q.includes("cold") || q.includes("khansi") || q.includes("जुकाम")) {
+    return `🤧 COUGH AND COLD
+
+General care:
+1. Rest properly.
+2. Drink enough fluids.
+3. Wash your hands regularly.
+4. Cover your mouth when coughing.
+5. Avoid sharing water bottles.
+
+Tell an adult if symptoms become worse.
+
+Seek urgent help if you experience breathing difficulty
+or chest pain.
+
+A doctor can help determine the cause.`;
+  }
+
+  // Stomach pain
+  if (q.includes("stomach") || q.includes("pet dard") || q.includes("पेट दर्द")) {
+    return `🩺 STOMACH PAIN
+
+Stomach pain can have many different causes.
+
+What you should do:
+1. Inform your parent or school nurse.
+2. Rest comfortably.
+3. Drink fluids if you can.
+4. Avoid eating anything that makes you feel worse.
+
+Seek urgent medical help for severe or worsening pain,
+a hard or swollen abdomen, repeated vomiting,
+blood in vomit or stool, or fainting.
+
+Do not self-medicate.`;
+  }
+
+  // First aid
+  if (q.includes("first aid") || q.includes("चोट") || q.includes("कट") || q.includes("cut")) {
+    return `🩹 BASIC FIRST AID
+
+For a minor cut:
+
+1. Wash your hands.
+2. Rinse the wound with clean running water.
+3. Apply gentle pressure with clean gauze if bleeding.
+4. Cover with a clean dressing.
+
+For severe bleeding, apply firm direct pressure
+and seek emergency medical help.
+
+For burns, cool the area under cool running water
+for 20 minutes. Do not apply ice, toothpaste or butter.
+
+Always inform a responsible adult.`;
+  }
+
+  // Nutrition
+  if (q.includes("nutrition") || q.includes("healthy food") || q.includes("diet") || q.includes("khana")) {
+    return `🥗 HEALTHY FOOD FOR STUDENTS
+
+A balanced diet can include:
+
+1. Fruits and vegetables.
+2. Whole grains.
+3. Protein-rich foods such as pulses, eggs or beans.
+4. Milk or suitable alternatives.
+5. Enough drinking water.
+
+Avoid skipping meals and try to maintain regular
+meal timings.
+
+A doctor or qualified dietitian can help with
+individual nutritional needs.`;
+  }
+
+  // Healthy habits
+  if (q.includes("healthy habit") || q.includes("fitness") || q.includes("health tips")) {
+    return `💚 HEALTHY HABITS FOR STUDENTS
+
+1. Sleep regularly and get enough rest.
+2. Eat a balanced diet.
+3. Stay physically active.
+4. Drink sufficient water.
+5. Maintain personal hygiene.
+6. Take screen breaks.
+7. Talk to someone when stressed.
+8. Maintain regular health checkups.
+
+Small healthy habits make a big difference!`;
+  }
+
+  // Water
+  if (q.includes("water") || q.includes("pani") || q.includes("पानी")) {
+    return `💧 WATER AND HYDRATION
+
+Drink water regularly throughout the day.
+Your needs depend on your age, activity and weather.
+
+Carry a clean water bottle to school.
+Drink more when physically active or in hot weather.
+
+Do not ignore signs of dehydration such as dizziness,
+very dark urine or unusual weakness. Inform an adult.`;
+  }
+
+  // Stress
+  if (q.includes("stress") || q.includes("anxiety") || q.includes("tension")) {
+    return `🧠 MENTAL WELLNESS
+
+Feeling stressed sometimes is normal.
+
+Some helpful steps:
+1. Talk to a trusted person.
+2. Take a short break.
+3. Try slow, comfortable breathing.
+4. Maintain a regular sleep schedule.
+5. Break large tasks into smaller ones.
+
+If stress feels overwhelming or continues,
+talk to a school counsellor or mental health professional.
+You do not have to handle it alone.`;
+  }
+
+  // Greeting
+  if (q.includes("hello") || q.includes("hi") || q.includes("namaste") || q.includes("नमस्ते")) {
+    return `Hello! 👋
+
+Welcome to the AI School Medical Assistant.
+
+I can help you learn about:
+• Common health concerns
+• First aid
+• Nutrition
+• Hygiene
+• Healthy habits
+
+What would you like to know?`;
+  }
+
+  // Default
+  return `Thank you for your question!
+
+I don't have enough information to provide a reliable
+answer to this particular question.
+
+You can ask me about:
+• Fever
+• Headache
+• Cough and cold
+• Stomach pain
+• First aid
+• Nutrition
+• Healthy habits
+
+For personal medical advice, please consult a qualified
+healthcare professional.
+
+Remember: I cannot diagnose medical conditions.`;
+}
+
+function sendMessage() {
+
+  const question = input.value.trim();
+
+  if (!question) return;
+
+  addMessage(question, "user");
+
+  input.value = "";
+
+  setTimeout(() => {
+    const response = getResponse(question);
+    addMessage(response, "bot");
+  }, 400);
+
+}
+
+function clearChat() {
+  messages.innerHTML = "";
+  addMessage(
+    "Hello! 👋 Welcome back to your School Medical Assistant. How can I help you today?",
+    "bot"
+  );
+}
+
+</script>
+
+</body>
+</html>
